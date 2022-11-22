@@ -1,6 +1,7 @@
 import TransactionsRow from "./TransactionsRow";
 import './Transactions.css';
 import { getAllPayments } from "../../data/DataFunctions";
+import { useState } from "react";
 
 const TransactionsTable = () => {
 
@@ -15,14 +16,20 @@ const TransactionsTable = () => {
     
      console.log(uniqueCountries);
     
+        const [selectedCountry, setSlectedCountry] = useState(uniqueCountries[0]);
 
+        const changeCountry = (event) => {
+            const option = event.target.options.selectedIndex;
+            setSlectedCountry(uniqueCountries[option]);
+        }
 
 return (
     <div>
-        <select name="countries" id="countries">
-            {uniqueCountries.map((country, index) =>             
-            <option key={index}>{country} </option>)}
+         <div className="transactionsCountrySelector">
+        <label>Select country:</label> <select onChange={changeCountry}>
+            {uniqueCountries.map (country => <option key={country} value={country}>{country}</option>)}
         </select>
+        </div>
     <table className="transactionsTable" id="transactionTable">
         <thead>
             <tr>
@@ -37,7 +44,7 @@ return (
             {payments.map(
                             (payment, index) => 
                             {
-                                return <TransactionsRow key={index} id={payment.id} date={payment.date}
+                                return payment.country === selectedCountry && <TransactionsRow key={index} id={payment.id} date={payment.date}
                                 country = {payment.country} currency ={payment.currency} amount={payment.amount}   />
                             }
             )
